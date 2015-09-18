@@ -148,9 +148,9 @@
 /dev/i2c-5                0660   media       media
 
 # DVB devices
-/dev/dvb/adapter0/demux*  0660   system     system
-/dev/dvb/adapter0/dvr*    0660   system     system
-/dev/dvb/adapter0/video*  0660   media       media
+#/dev/dvb/adapter0/demux*  0660   system     system
+#/dev/dvb/adapter0/dvr*    0660   system     system
+#/dev/dvb/adapter0/video*  0660   media       media
 
 # Broadcast devices
 /dev/tsc_mux0             0660   media       media
