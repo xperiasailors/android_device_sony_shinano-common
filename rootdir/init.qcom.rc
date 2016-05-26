@@ -59,8 +59,8 @@ on init
     chown bluetooth bluetooth ${ro.bt.bdaddr_path}
 
     # bluetooth LPM
-    chown bluetooth bluetooth /proc/bluetooth/sleep/lpm
-    chown bluetooth bluetooth /proc/bluetooth/sleep/btwrite
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/lpm
+    chown bluetooth net_bt_stack /proc/bluetooth/sleep/btwrite
 
     write /sys/module/qpnp_rtc/parameters/poweron_alarm 1
 
@@ -107,12 +107,12 @@ on early-boot
 on boot
     write /sys/module/qpnp_power_on/parameters/forcecrash_on 1
 
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/type
+    chown bluetooth net_bt_stack /sys/class/rfkill/rfkill0/state
     chmod 0660 /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /dev/ttyHS0
+    chown bluetooth net_bt_stack /dev/ttyHS0
     chmod 0660 /dev/ttyHS0
-    chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+    chown bluetooth net_bt_stack /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
     # Create QMUX deamon socket area
@@ -275,7 +275,6 @@ on post-fs
 on post-fs-data
     # Used by taimport for MAC addresses
     mkdir /data/etc 0755 root shell
-    start taimport
 
     mkdir /data/media 0770 media_rw media_rw
 
@@ -384,10 +383,9 @@ service tad_static /system/bin/tad_static /dev/block/mmcblk0 1,16
     class core
 
 service taimport /system/bin/taimport
-    class main
+    class late_start
     user root
     group system
-    disabled
     oneshot
 
 service netmgrd /system/bin/netmgrd
@@ -502,10 +500,9 @@ service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw
     disabled
 
 service mpdecision /system/bin/mpdecision --avg_comp
-    class main
+    class late_start
     user root
     group system
-    disabled
 
 # Start suntrold
 service suntrold /system/bin/suntrold
@@ -577,3 +574,8 @@ service tfa9890_amp /system/bin/tfa9890_amp
     group audio
     oneshot
     ioprio rt 4
+
+service audiod /system/bin/audiod
+    class late_start
+    user system
+    group system
